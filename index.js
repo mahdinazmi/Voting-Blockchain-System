@@ -7,6 +7,7 @@ app.use(
         extended:true
     })
 )
+
 // Connect front end to backend
 app.use(express.static(__dirname));
 app.use(express.json());
@@ -19,21 +20,26 @@ const API_URL = process.env.API_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
 
+// Read contract json file
 const {abi} = require('./artifacts/contracts/Voting.sol/Voting.json');
 const provider = new ethers.providers.JsonRpcProvider(API_URL);
 
+// get wallet signer
 const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
 const contractInstance = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 
+// open index page
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 })
 
+// open index page
 app.get("/index.html", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 })
 
+// vote registration
 app.post("/vote", async (req, res) => {
     var vote = req.body.vote;
     console.log(vote)
